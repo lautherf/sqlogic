@@ -4,7 +4,7 @@
 
 一句话哲学:**表 = 谓词,行 = 事实,递归 CTE = 规则,WHERE = 剪枝/约束。**
 
-## 五个演示
+## 六个演示
 
 | 模块 | 问题 | 演示点 |
 |---|---|---|
@@ -40,17 +40,25 @@ Rule       → 递归 CTE/派生   分类→大类;买过商品→买过其品�
 
 与 Prolog 的对照:
 
-| Prolog | 本实现 |
-|---|---|
-| fact / goal | 表 / 查询 |
-| rule(子句) | 递归 CTE(`UNION ALL` 分支) |
-| findall / setof | `SELECT ... WHERE` |
-| negation as failure | `NOT EXISTS` / 反联接 |
-| 回溯 | 集合式穷举(无顺序语义,故无 `cut`) |
-| 合一 + 逻辑变量 | 无(只有等值匹配)——可终止子集,换完全性 |
+| Prolog | 本实现 | 演示 |
+|---|---|---|
+| fact / goal | 表 / 查询 | `ontology` |
+| rule(子句) | 递归 CTE(`UNION ALL` 分支) | `elclosure` |
+| `findall` / `setof` | `SELECT ... WHERE` | 全部 |
+| `negation as failure` | `NOT EXISTS` / 反联接 | `farmer` 危险过滤 |
+| 回溯(DFS) | 集合式穷举 + bitmask 剪枝 | `queens` |
+| 双向搜索 / BFS | 逐层展开的递归 CTE | `farmer` |
+| CLP(FD) 约束 | 生成 × 约束 + 分层剪枝 | `zebra` |
+| 物化/存在量词(A⊑∃R.B) | 预生成 id 池 + 递归物化 | `chase` |
+| 合一 + 逻辑变量 | 无(只有等值匹配)——可终止子集,换完全性 | — |
+| `cut` | 无顺序语义,由剪枝的 WHERE 取代 | — |
+| `call/N` 元编程 | 无 | — |
+
+本套件对应的能力梯度:回溯 → BFS → 约束剪枝 → 规则推理 → 存在量词。
 
 ## 边界
 
-- 只覆盖**可终止**的逻辑:无函数符号、无 `call/N`、无负位移
-- `1 <<`, `json_insert` 为 SQLite 方言,要求 ≥ 3.38
-- 剪枝位运算用 N 做平移偏移,保证位移恒非负
+- 只覆盖**可终止**的逻辑:无函数符号、无 `call/N`
+- SQLite 递归 CTE 的**递归表不可自连接**,多规则复合须退到 bottom-up 迭代(`elclosure`)
+- `1 <<`, `json_insert`, `WITH RECURSIVE` 为 SQLite 方言,要求 ≥ 3.38
+- 位移需用平移偏移保证恒非负(如 queens 的 `rown - c + N`)
