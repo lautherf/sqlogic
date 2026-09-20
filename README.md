@@ -4,7 +4,7 @@
 
 一句话哲学:**表 = 谓词,行 = 事实,递归 CTE = 规则,WHERE = 剪枝/约束。**
 
-## 六个演示
+## 七个演示
 
 | 模块 | 问题 | 演示点 |
 |---|---|---|
@@ -14,6 +14,7 @@
 | `ontology/` | 电商本体 | 知识表示:关系为枢纽,规则推导新事实 |
 | `elclosure/` | EL 组合闭包 | 多规则复合(partOf∘isA 等)bottom-up 迭代到不动点 |
 | `chase/` | A⊑∃R.B 物化 | 走出 RDFS:存在量词生成全新个体 |
+| `ontology-engine/` | 本体论推理机 | 通用引擎:TBox 物化 × 6 类原语 × 复合规则 × 一致性检查 |
 
 ## 运行
 
@@ -25,7 +26,33 @@ python3 zebra/run.py             # Einstein 五户迷题:唯一解
 python3 ontology/run.py          # 六要素 + 两条推理规则 + 约束拦截
 python3 elclosure/run.py         # EL 组合闭包:5 条规则复合,4 轮迭代收敛
 python3 chase/run.py             # 存在量词物化:生成全新个体 + 逆关系迭代
+python3 ontology-engine/engine.py demo.sql   # 本体论推理机:TBox/ABox 物化
 ```
+
+## OWL 2 RL 推理机(`ontology-engine/`)
+
+把本体问题交给**通用引擎**,而不是写死每个样例:
+
+```
+fact(s,p,o,src)    ABox + 物化闭包(推理溯源:每条结论记得是谁推的)
+axiom(a,x,y)       TBox 公理:subClass / subProperty / domain / range /
+                   inverse / transitive / symmetric / disjoint
+rule(r1,r2,out,jp) 用户自定义复合规则(复用 elclosure 的 J1/J2 接法)
+```
+
+内建 10 条推理规则 → naive 不动点迭代,直到某一轮零新增:
+
+| 规则 | 内容 |
+|---|---|
+| R1/R3 | subClass、subProperty 传递闭包 |
+| R2 | type 提升:`type(x,C) ∧ C⊑D → type(x,D)` |
+| R4 | subProperty 属性替换 |
+| R5/R6 | domain / range 补全实例类型 |
+| R7 | inverse 反向态 |
+| R8/R9 | transitive / symmetric 性质展开 |
+| R10 | 自定义复合(表驱动) |
+
+一致性:disjoint 冲突检测(一个体同时是两个不相交类)——demo 里 `样机` 故意违反,引擎照实报告。
 
 ## 映射:本体的六要素
 
