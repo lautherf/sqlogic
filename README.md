@@ -1,4 +1,4 @@
-# sql-logic
+# sqlogic
 
 用 **SQL 递归 CTE + 集合式推理**做逻辑编程(SQLite 可终止的 Datalog 子集)。
 
