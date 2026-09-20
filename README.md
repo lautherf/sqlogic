@@ -10,6 +10,7 @@
 |---|---|---|
 | `queens/` | N 皇后 | 回溯搜索:集合式穷举 × bitmask 剪枝 |
 | `farmer/` | 农民过河 | BFS 状态搜索:16 状态 × 危险过滤 × 防环 |
+| `zebra/` | Einstein 五户迷题 | 120⁵ 组合空间 × 15 线索分层剪枝,唯一解 |
 | `ontology/` | 电商本体 | 知识表示:关系为枢纽,规则推导新事实 |
 | `elclosure/` | EL 组合闭包 | 多规则复合(partOf∘isA 等)bottom-up 迭代到不动点 |
 | `chase/` | A⊑∃R.B 物化 | 走出 RDFS:存在量词生成全新个体 |
@@ -20,6 +21,7 @@
 python3 queens/run.py            # 默认 8 皇后
 python3 queens/run.py 10         # 任意 N
 python3 farmer/run.py            # 农民过河:7 步最短解
+python3 zebra/run.py             # Einstein 五户迷题:唯一解
 python3 ontology/run.py          # 六要素 + 两条推理规则 + 约束拦截
 python3 elclosure/run.py         # EL 组合闭包:5 条规则复合,4 轮迭代收敛
 python3 chase/run.py             # 存在量词物化:生成全新个体 + 逆关系迭代
