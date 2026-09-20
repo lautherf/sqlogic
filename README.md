@@ -10,6 +10,7 @@
 |---|---|---|
 | `queens/` | N 皇后 | 回溯搜索:集合式穷举 × bitmask 剪枝 |
 | `ontology/` | 电商本体 | 知识表示:关系为枢纽,规则推导新事实 |
+| `chase/` | A⊑∃R.B 物化 | 走出 RDFS:存在量词生成全新个体 |
 
 ## 运行
 
@@ -17,6 +18,7 @@
 python3 queens/run.py            # 默认 8 皇后
 python3 queens/run.py 10         # 任意 N
 python3 ontology/run.py          # 六要素 + 两条推理规则 + 约束拦截
+python3 chase/run.py             # 存在量词物化:生成全新个体 + 逆关系迭代
 ```
 
 ## 映射:本体的六要素
